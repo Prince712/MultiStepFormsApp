@@ -13,6 +13,7 @@ export const fontSizes = {
   small: 12,
   medium: 16,
   large: 18,
+  minus: -15,
 };
 
 export const spacing = {

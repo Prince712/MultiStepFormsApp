@@ -17,6 +17,7 @@ import {colors, fontSizes, spacing} from '../styles/theme';
 const PlanSelection = ({navigation}) => {
   const dispatch = useDispatch();
 
+  const [focusedInput, setFocusedInput] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [planType, setPlanType] = useState('');
@@ -70,11 +71,16 @@ const PlanSelection = ({navigation}) => {
     navigation.navigate('SubmissionList');
   };
 
+  const getInputStyle = fieldName => [
+    styles.input,
+    focusedInput === fieldName && {borderColor: colors.primary},
+  ];
+
   return (
     <View style={styles.container}>
       {/* Fixed Progress Bar */}
       <View style={styles.progressBarContainer}>
-        <ProgressBar step={3} totalSteps={3} />
+        <ProgressBar step={3} totalSteps={3} stepName={'Plan Details'} />
       </View>
 
       {/* Scrollable Content */}
@@ -141,9 +147,11 @@ const PlanSelection = ({navigation}) => {
         {/* Number of Users */}
         <Text style={styles.label}>Number of Users:</Text>
         <TextInput
-          style={styles.input}
+          style={getInputStyle('users')}
           keyboardType="numeric"
           onChangeText={value => setUserCount(value)}
+          onFocus={() => setFocusedInput('users')}
+          onBlur={() => setFocusedInput(null)}
           value={userCount}
         />
 

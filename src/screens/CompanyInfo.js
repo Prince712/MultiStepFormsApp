@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { saveCompanyInfo } from '../redux/formSlice';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {saveCompanyInfo} from '../redux/formSlice';
 import ProgressBar from '../components/ProgressBar';
-import { colors, fontSizes, spacing } from '../styles/theme';
+import {colors, fontSizes, spacing} from '../styles/theme';
 
-const CompanyInfo = ({ navigation }) => {
+const CompanyInfo = ({navigation}) => {
   const dispatch = useDispatch();
 
   // Local states to manage checkboxes and radio buttons
@@ -13,9 +20,9 @@ const CompanyInfo = ({ navigation }) => {
   const [employeeCount, setEmployeeCount] = useState('');
   const [wfhPolicy, setWfhPolicy] = useState('');
 
-  const toggleCheckbox = (field) => {
+  const toggleCheckbox = field => {
     if (selectedFields.includes(field)) {
-      setSelectedFields(selectedFields.filter((item) => item !== field));
+      setSelectedFields(selectedFields.filter(item => item !== field));
     } else {
       setSelectedFields([...selectedFields, field]);
     }
@@ -41,36 +48,48 @@ const CompanyInfo = ({ navigation }) => {
     <View style={styles.container}>
       {/* Fixed Progress Bar */}
       <View style={styles.progressBarContainer}>
-        <ProgressBar step={2} totalSteps={3} />
+        <ProgressBar step={2} totalSteps={3} stepName={'Company Details'} />
       </View>
 
       {/* Scrollable Content */}
       <ScrollView contentContainerStyle={styles.formContainer}>
         {/* Company Fields */}
-        <Text style={styles.label}>Your company is working on which field?</Text>
+        <Text style={styles.label}>
+          Your company is working on which field?
+        </Text>
         <View style={styles.checkboxGroup}>
-          {['Tech', 'Marketing', 'Finance', 'HR'].map((field) => (
+          {['Tech', 'Marketing', 'Finance', 'HR'].map(field => (
             <TouchableOpacity
               key={field}
               style={styles.checkboxContainer}
-              onPress={() => toggleCheckbox(field)}
-            >
-              <View style={[styles.checkbox, selectedFields.includes(field) && styles.checkboxSelected]} />
+              onPress={() => toggleCheckbox(field)}>
+              <View
+                style={[
+                  styles.checkbox,
+                  selectedFields.includes(field) && styles.checkboxSelected,
+                ]}
+              />
               <Text style={styles.checkboxLabel}>{field}</Text>
             </TouchableOpacity>
           ))}
         </View>
 
         {/* Employee Count */}
-        <Text style={styles.label}>How many employees are in your company?</Text>
+        <Text style={styles.label}>
+          How many employees are in your company?
+        </Text>
         <View style={styles.radioGroup}>
-          {['1-10', '10-20', '20-30', '40+'].map((range) => (
+          {['1-10', '10-20', '20-30', '40+'].map(range => (
             <TouchableOpacity
               key={range}
               style={styles.radioContainer}
-              onPress={() => setEmployeeCount(range)}
-            >
-              <View style={[styles.radioCircle, employeeCount === range && styles.radioSelected]} />
+              onPress={() => setEmployeeCount(range)}>
+              <View
+                style={[
+                  styles.radioCircle,
+                  employeeCount === range && styles.radioSelected,
+                ]}
+              />
               <Text style={styles.radioLabel}>{range}</Text>
             </TouchableOpacity>
           ))}
@@ -79,13 +98,17 @@ const CompanyInfo = ({ navigation }) => {
         {/* WFH Policy */}
         <Text style={styles.label}>Does the company have a WFH policy?</Text>
         <View style={styles.radioGroup}>
-          {['Yes', 'No'].map((option) => (
+          {['Yes', 'No'].map(option => (
             <TouchableOpacity
               key={option}
               style={styles.radioContainer}
-              onPress={() => setWfhPolicy(option)}
-            >
-              <View style={[styles.radioCircle, wfhPolicy === option && styles.radioSelected]} />
+              onPress={() => setWfhPolicy(option)}>
+              <View
+                style={[
+                  styles.radioCircle,
+                  wfhPolicy === option && styles.radioSelected,
+                ]}
+              />
               <Text style={styles.radioLabel}>{option}</Text>
             </TouchableOpacity>
           ))}
@@ -93,11 +116,19 @@ const CompanyInfo = ({ navigation }) => {
 
         {/* Navigation Buttons */}
         <View style={styles.buttonContainer}>
-          <View style={{ flex: 1, marginRight: spacing.small }}>
-            <Button title="Previous" color={colors.buttonDisabled} onPress={() => navigation.goBack()} />
+          <View style={{flex: 1, marginRight: spacing.small}}>
+            <Button
+              title="Previous"
+              color={colors.buttonDisabled}
+              onPress={() => navigation.goBack()}
+            />
           </View>
-          <View style={{ flex: 1, marginLeft: spacing.small }}>
-            <Button title="Next" color={colors.primary} onPress={handleSubmit} />
+          <View style={{flex: 1, marginLeft: spacing.small}}>
+            <Button
+              title="Next"
+              color={colors.primary}
+              onPress={handleSubmit}
+            />
           </View>
         </View>
       </ScrollView>
@@ -106,18 +137,27 @@ const CompanyInfo = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
+  container: {flex: 1, backgroundColor: colors.background},
   progressBarContainer: {
     padding: spacing.medium,
     backgroundColor: colors.background,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  formContainer: { padding: spacing.large, backgroundColor: colors.background },
-  label: { fontSize: fontSizes.medium, fontWeight: 'bold', marginBottom: spacing.small, color: colors.text },
-  
+  formContainer: {padding: spacing.large, backgroundColor: colors.background},
+  label: {
+    fontSize: fontSizes.medium,
+    fontWeight: 'bold',
+    marginBottom: spacing.small,
+    color: colors.text,
+  },
+
   // Checkbox styles
-  checkboxGroup: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: spacing.medium },
+  checkboxGroup: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: spacing.medium,
+  },
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -131,12 +171,16 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     marginRight: spacing.small,
   },
-  checkboxSelected: { backgroundColor: colors.primary },
-  checkboxLabel: { fontSize: fontSizes.medium, color: colors.text },
+  checkboxSelected: {backgroundColor: colors.primary},
+  checkboxLabel: {fontSize: fontSizes.medium, color: colors.text},
 
   // Radio button styles
-  radioGroup: { marginBottom: spacing.medium },
-  radioContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: spacing.small },
+  radioGroup: {marginBottom: spacing.medium},
+  radioContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: spacing.small,
+  },
   radioCircle: {
     width: 20,
     height: 20,
@@ -145,11 +189,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: spacing.small,
   },
-  radioSelected: { backgroundColor: colors.primary },
-  radioLabel: { fontSize: fontSizes.medium, color: colors.text },
+  radioSelected: {backgroundColor: colors.primary},
+  radioLabel: {fontSize: fontSizes.medium, color: colors.text},
 
   // Button container
-  buttonContainer: { flexDirection: 'row', marginTop: spacing.large },
+  buttonContainer: {flexDirection: 'row', marginTop: spacing.large},
 });
 
 export default CompanyInfo;

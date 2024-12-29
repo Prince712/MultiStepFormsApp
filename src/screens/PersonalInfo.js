@@ -1,15 +1,23 @@
-import React from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import { useFormik } from 'formik';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
+import {Picker} from '@react-native-picker/picker';
+import {useFormik} from 'formik';
 import * as Yup from 'yup';
-import { useDispatch } from 'react-redux';
-import { savePersonalInfo } from '../redux/formSlice';
+import {useDispatch} from 'react-redux';
+import {savePersonalInfo} from '../redux/formSlice';
 import ProgressBar from '../components/ProgressBar';
-import { colors, fontSizes, spacing } from '../styles/theme';
+import {colors, fontSizes, spacing} from '../styles/theme';
 
-const PersonalInfo = ({ navigation }) => {
+const PersonalInfo = ({navigation}) => {
   const dispatch = useDispatch();
+  const [focusedInput, setFocusedInput] = useState(null);
 
   const formik = useFormik({
     initialValues: {
@@ -32,27 +40,41 @@ const PersonalInfo = ({ navigation }) => {
         .matches(/^\d{5}$/, 'Must be a valid 5-digit ZIP code')
         .required('Required'),
     }),
-    onSubmit: (values) => {
+    onSubmit: values => {
+      console.log('values', values);
       dispatch(savePersonalInfo(values));
       navigation.navigate('CompanyInfo');
     },
   });
 
+  const getInputStyle = fieldName => [
+    styles.input,
+    focusedInput === fieldName && {borderColor: colors.primary},
+    formik.touched[fieldName] &&
+      formik.errors[fieldName] && {borderColor: colors.error},
+  ];
+
   return (
     <View style={styles.container}>
-      {/* Fixed Progress Bar */}
       <View style={styles.progressBarContainer}>
-        <ProgressBar step={1} totalSteps={3}  />
+        <ProgressBar
+          step={1}
+          totalSteps={3}
+          stepName={'Personal Information'}
+        />
       </View>
-
-      {/* Scrollable Content */}
       <ScrollView contentContainerStyle={styles.formContainer}>
         <Text style={styles.label}>First Name</Text>
         <TextInput
-          style={styles.input}
+          style={getInputStyle('firstName')}
           onChangeText={formik.handleChange('firstName')}
-          onBlur={formik.handleBlur('firstName')}
+          onBlur={() => {
+            formik.handleBlur('firstName');
+            setFocusedInput(null);
+          }}
+          onFocus={() => setFocusedInput('firstName')}
           value={formik.values.firstName}
+          placeholder="Enter First Name"
         />
         {formik.touched.firstName && formik.errors.firstName && (
           <Text style={styles.error}>{formik.errors.firstName}</Text>
@@ -60,10 +82,15 @@ const PersonalInfo = ({ navigation }) => {
 
         <Text style={styles.label}>Last Name</Text>
         <TextInput
-          style={styles.input}
+          style={getInputStyle('lastName')}
           onChangeText={formik.handleChange('lastName')}
-          onBlur={formik.handleBlur('lastName')}
+          onBlur={() => {
+            formik.handleBlur('lastName');
+            setFocusedInput(null);
+          }}
+          onFocus={() => setFocusedInput('lastName')}
           value={formik.values.lastName}
+          placeholder="Enter Last Name"
         />
         {formik.touched.lastName && formik.errors.lastName && (
           <Text style={styles.error}>{formik.errors.lastName}</Text>
@@ -71,11 +98,16 @@ const PersonalInfo = ({ navigation }) => {
 
         <Text style={styles.label}>Email</Text>
         <TextInput
-          style={styles.input}
+          style={getInputStyle('email')}
           keyboardType="email-address"
           onChangeText={formik.handleChange('email')}
-          onBlur={formik.handleBlur('email')}
+          onBlur={() => {
+            formik.handleBlur('email');
+            setFocusedInput(null);
+          }}
+          onFocus={() => setFocusedInput('email')}
           value={formik.values.email}
+          placeholder="Enter Email Address"
         />
         {formik.touched.email && formik.errors.email && (
           <Text style={styles.error}>{formik.errors.email}</Text>
@@ -83,10 +115,15 @@ const PersonalInfo = ({ navigation }) => {
 
         <Text style={styles.label}>Company Name</Text>
         <TextInput
-          style={styles.input}
+          style={getInputStyle('companyName')}
           onChangeText={formik.handleChange('companyName')}
-          onBlur={formik.handleBlur('companyName')}
+          onBlur={() => {
+            formik.handleBlur('companyName');
+            setFocusedInput(null);
+          }}
+          onFocus={() => setFocusedInput('companyName')}
           value={formik.values.companyName}
+          placeholder="Enter Company Name"
         />
         {formik.touched.companyName && formik.errors.companyName && (
           <Text style={styles.error}>{formik.errors.companyName}</Text>
@@ -94,11 +131,16 @@ const PersonalInfo = ({ navigation }) => {
 
         <Text style={styles.label}>Company Website</Text>
         <TextInput
-          style={styles.input}
+          style={getInputStyle('companyWebsite')}
           keyboardType="url"
           onChangeText={formik.handleChange('companyWebsite')}
-          onBlur={formik.handleBlur('companyWebsite')}
+          onBlur={() => {
+            formik.handleBlur('companyWebsite');
+            setFocusedInput(null);
+          }}
+          onFocus={() => setFocusedInput('companyWebsite')}
           value={formik.values.companyWebsite}
+          placeholder="Enter Company Website"
         />
         {formik.touched.companyWebsite && formik.errors.companyWebsite && (
           <Text style={styles.error}>{formik.errors.companyWebsite}</Text>
@@ -108,8 +150,9 @@ const PersonalInfo = ({ navigation }) => {
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={formik.values.state}
-            onValueChange={(itemValue) => formik.setFieldValue('state', itemValue)}
-          >
+            onValueChange={itemValue =>
+              formik.setFieldValue('state', itemValue)
+            }>
             <Picker.Item label="Select a state" value="" />
             <Picker.Item label="California" value="California" />
             <Picker.Item label="Texas" value="Texas" />
@@ -124,19 +167,28 @@ const PersonalInfo = ({ navigation }) => {
 
         <Text style={styles.label}>ZIP Code</Text>
         <TextInput
-          style={styles.input}
+          style={getInputStyle('zipCode')}
           keyboardType="numeric"
           maxLength={5}
           onChangeText={formik.handleChange('zipCode')}
-          onBlur={formik.handleBlur('zipCode')}
+          onBlur={() => {
+            formik.handleBlur('zipCode');
+            setFocusedInput(null);
+          }}
+          onFocus={() => setFocusedInput('zipCode')}
           value={formik.values.zipCode}
+          placeholder="Enter ZIP Code"
         />
         {formik.touched.zipCode && formik.errors.zipCode && (
           <Text style={styles.error}>{formik.errors.zipCode}</Text>
         )}
 
         <View style={styles.buttonContainer}>
-          <Button title="Next" color={colors.primary} onPress={formik.handleSubmit} />
+          <Button
+            title="Next"
+            color={colors.primary}
+            onPress={formik.handleSubmit}
+          />
         </View>
       </ScrollView>
     </View>
@@ -144,15 +196,20 @@ const PersonalInfo = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
+  container: {flex: 1, backgroundColor: colors.background},
   progressBarContainer: {
     padding: spacing.medium,
     backgroundColor: colors.background,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  formContainer: { padding: spacing.large, backgroundColor: colors.background },
-  label: { fontSize: fontSizes.medium, fontWeight: 'bold', marginBottom: spacing.small, color: colors.text },
+  formContainer: {padding: spacing.large, backgroundColor: colors.background},
+  label: {
+    fontSize: fontSizes.medium,
+    fontWeight: 'bold',
+    marginBottom: spacing.small,
+    color: colors.text,
+  },
   input: {
     borderWidth: 1,
     borderColor: colors.border,
@@ -167,8 +224,14 @@ const styles = StyleSheet.create({
     marginBottom: spacing.medium,
     overflow: 'hidden',
   },
-  error: { color: colors.error, fontSize: fontSizes.small },
-  buttonContainer: { marginTop: spacing.large },
+  error: {
+    color: colors.error,
+    fontSize: fontSizes.small,
+    marginTop: fontSizes.minus,
+    marginBottom: fontSizes.small,
+  },
+
+  buttonContainer: {marginTop: spacing.large},
 });
 
 export default PersonalInfo;

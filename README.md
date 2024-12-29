@@ -10,7 +10,8 @@ We have used Libraries like Formik,yup,redux toolkit for this project.
 <b>Android  :</b> 
 <br/>
 <br/>
-![WhatsApp Image 2024-12-29 at 7 57 29 PM](https://github.com/user-attachments/assets/e3283ae7-70df-4b97-86e5-08a160ed24a3)
+<br/>
+<br/>
 
 
 <img src="https://github.com/user-attachments/assets/ef97627a-89a0-40a9-bedc-5c8a436452a6" width="250">
